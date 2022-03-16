@@ -46,16 +46,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .antMatchers(
-                        "/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-ui.html",
-                        "/v2/**",
-                        "/swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/configuration/security",
-                        "/webjars/**",
-                        "/swagger.json",
-                        "/auth/**")
+                        "/auth/**",
+                        "/test/**")
                 .permitAll()
                 .antMatchers("/api/**")
                 .hasAnyRole("USER", "ADMIN")
