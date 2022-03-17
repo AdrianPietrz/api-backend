@@ -1,6 +1,8 @@
 package api.backend.Models;
 
+
 import lombok.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,25 +11,25 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table
 @RequiredArgsConstructor
-public class UserModel {
+public class VideoModel {
     @Id
     @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
+            name = "video_sequence",
+            sequenceName = "video_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
+            generator = "video_sequence"
     )
     private Long id; // autoincremented
     @NonNull
-    private String username;
+    private String title;
     @NonNull
-    private String email;
+    private String director;
     @NonNull
-    private String password; // Should be encoded
-    @NonNull
-    private String role;
+    private String genere;
+
 
 }
+

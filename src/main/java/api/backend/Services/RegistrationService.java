@@ -34,7 +34,7 @@ public class RegistrationService {
             return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
         }
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
-        UserModel user = new UserModel (request.getUsername(),request.getEmail(),encodedPassword);
+        UserModel user = new UserModel (request.getUsername(),request.getEmail(),encodedPassword,"USER");
         userRepository.save(user);
         return new ResponseEntity<>("User registered", HttpStatus.OK);
     }
