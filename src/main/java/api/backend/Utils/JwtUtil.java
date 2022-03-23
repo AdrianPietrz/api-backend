@@ -17,6 +17,19 @@ public class JwtUtil {
 
     private String key = "secret";
 
+    public String stripToken(String token) {
+        token = token.substring(7);
+        return token;
+    }
+
+    public String getUsernameFromRequestToken(String token) {
+        token = stripToken(token);
+        token = extractUsername(token);
+        return token;
+    }
+
+
+
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
     }

@@ -31,7 +31,9 @@ public class VideoModel {
     @JoinColumn(name = "video_id")
     private List<CommentModel> comments;
 
-
+    public void addComment(CommentModel comment){
+        comments.add(comment);
+    }
 
 }
 

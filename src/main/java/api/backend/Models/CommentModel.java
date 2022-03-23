@@ -1,5 +1,6 @@
 package api.backend.Models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -34,5 +35,9 @@ public class CommentModel {
     @NonNull
     private Date date;
 
-
+    public CommentModel(@NonNull int rating, @NonNull String comment, @NonNull Date date) {
+        this.rating = rating;
+        this.comment = comment;
+        this.date = date;
+    }
 }

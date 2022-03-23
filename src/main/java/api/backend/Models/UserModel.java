@@ -35,4 +35,7 @@ public class UserModel {
     @JoinColumn(name = "user_id")
     private List<CommentModel> comments;
 
+    public void addComment(CommentModel comment){
+        comments.add(comment);
+    }
 }
