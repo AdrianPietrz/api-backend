@@ -11,16 +11,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Table
-public class DirectorModel {
+public class VideoCategory {
     @Id
     @SequenceGenerator(
-            name = "direcor_sequence",
-            sequenceName = "direcor_sequence",
+            name = "category_sequence",
+            sequenceName = "category_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "direcor_sequence"
+            generator = "category_sequence"
     )
     private Long id; // autoincremented
 
@@ -28,7 +28,6 @@ public class DirectorModel {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "director_id")
-    private List<VideoModel> videos;
-
+    @JoinColumn(name = "category_id")
+    private List<Video> videos;
 }

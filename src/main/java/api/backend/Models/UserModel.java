@@ -33,9 +33,9 @@ public class UserModel {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    private List<CommentModel> comments;
+    private List<Comment> comments;
 
-    public void addComment(CommentModel comment){
+    public void addComment(Comment comment){
         comments.add(comment);
     }
 }

@@ -1,14 +1,13 @@
 package api.backend.Controllers;
 
-import api.backend.Models.CommentModel;
+import api.backend.Models.Comment;
 import api.backend.Models.CommentRequest;
 import api.backend.Models.UserModel;
-import api.backend.Models.VideoModel;
+import api.backend.Models.Video;
 import api.backend.Repositories.VideoRepository;
 import api.backend.Services.UserDetailsServices;
 import api.backend.Utils.JwtUtil;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +16,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Optional;
 
 @RestController
 public class VideoController {
@@ -53,14 +51,14 @@ public class VideoController {
         token = jwtUtil.getUsernameFromRequestToken(token);
         UserModel user = userDetailsServices.getUserByUsername(token);
         Date date = new Date();
-        CommentModel comment = new CommentModel(commentRequest.getRating(),commentRequest.getText(),date);
-        VideoModel videoModel;
+        Comment comment = new Comment(commentRequest.getRating(),commentRequest.getText(),date);
+        Video video;
         if(videoRepository.findById(id).isPresent()){
-            videoModel = videoRepository.findById(id).get();
+            video = videoRepository.findById(id).get();
         } else {
             return new ResponseEntity<>("Video not found!", HttpStatus.BAD_REQUEST);
         }
-        videoModel.addComment(comment);
+        video.addComment(comment);
         user.addComment(comment);
 
         return new ResponseEntity<>("Comment added!", HttpStatus.OK);
