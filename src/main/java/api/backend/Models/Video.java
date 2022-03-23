@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Table
-public class VideoModel {
+public class Video {
     @Id
     @SequenceGenerator(
             name = "video_sequence",
@@ -29,9 +29,11 @@ public class VideoModel {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "video_id")
-    private List<CommentModel> comments;
+    private List<Comment> comments;
 
-
+    public void addComment(Comment comment){
+        comments.add(comment);
+    }
 
 }
 
