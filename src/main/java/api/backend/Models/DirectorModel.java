@@ -1,7 +1,8 @@
 package api.backend.Models;
 
-
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,28 +11,24 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Table
-public class VideoModel {
+public class DirectorModel {
     @Id
     @SequenceGenerator(
-            name = "video_sequence",
-            sequenceName = "video_sequence",
+            name = "direcor_sequence",
+            sequenceName = "direcor_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "video_sequence"
+            generator = "direcor_sequence"
     )
     private Long id; // autoincremented
+
     @NonNull
-    private String title;
-    @NonNull
-    private String description;
+    private String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "video_id")
-    private List<CommentModel> comments;
-
-
+    @JoinColumn(name = "director_id")
+    private List<VideoModel> videos;
 
 }
-

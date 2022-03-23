@@ -2,6 +2,7 @@ package api.backend.Models;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -29,5 +30,9 @@ public class UserModel {
     private String password; // Should be encoded
     @NonNull
     private String role;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<CommentModel> comments;
 
 }
