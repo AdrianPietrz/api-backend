@@ -1,45 +1,42 @@
 package api.backend.Controllers;
 
-import api.backend.Models.Comment;
-import api.backend.Models.CommentRequest;
-import api.backend.Models.UserModel;
-import api.backend.Models.Video;
+import api.backend.Models.*;
+import api.backend.Repositories.DirectorRepository;
 import api.backend.Repositories.VideoRepository;
 import api.backend.Services.UserDetailsServices;
 import api.backend.Utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
 @RestController
 public class VideoController {
 
-
+    @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
     private UserDetailsServices userDetailsServices;
+    @Autowired
     private VideoRepository videoRepository;
+    @Autowired
+    private DirectorRepository directorRepository;
 
     @RequestMapping(value = "/api/video/add", method = RequestMethod.POST)
     public ResponseEntity<?> uploadVideo(
             @RequestHeader(name = "Authorization") String token,
-            @RequestParam("file") MultipartFile file) {
+            @RequestBody VideoRequest videoRequest) {
 
-        String path = "src/main/resources/" + "video" + ".mp4";
-        File appFile = new File(path);
-        try {
-            appFile.createNewFile();
-            FileOutputStream fout = new FileOutputStream(appFile);
-            fout.write(file.getBytes());
-            fout.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Video video = new Video();
+        video.setTitle(videoRequest.getTitle());
+        video.setDescription(videoRequest.getDescription());
+
+        Director director = directorRepository.getById(1L);
+        video.setDirector(director);
+        videoRepository.save(video);
+        director.addDirectedVideo(video);
+
         return new ResponseEntity<>("Video added!", HttpStatus.CREATED);
     }
 

@@ -1,6 +1,7 @@
 package api.backend.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,14 +23,17 @@ public class Video {
             generator = "video_sequence"
     )
     private Long id; // autoincremented
-    @NonNull
     private String title;
-    @NonNull
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "video_id")
     private List<Comment> comments;
+
+    @ManyToOne
+    @JoinColumn(name="director_id", nullable=false)
+    @JsonIgnore
+    private Director director;
 
     public void addComment(Comment comment){
         comments.add(comment);

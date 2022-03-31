@@ -1,5 +1,6 @@
 package api.backend.Models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class Director {
     @Id
@@ -27,8 +29,15 @@ public class Director {
     @NonNull
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "director_id")
+    @OneToMany(mappedBy = "director",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos;
 
+
+    public void addDirectedVideo(Video video){
+        this.videos.add(video);
+    }
+
+    public Director(@NonNull String name) {
+        this.name = name;
+    }
 }
