@@ -1,5 +1,6 @@
 package api.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Director {
     @NonNull
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "director",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos;
 

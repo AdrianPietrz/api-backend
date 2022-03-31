@@ -34,8 +34,11 @@ public class VideoController {
 
         Director director = directorRepository.getById(1L);
         video.setDirector(director);
-        videoRepository.save(video);
+
         director.addDirectedVideo(video);
+
+        videoRepository.save(video);
+        directorRepository.save(director);
 
         return new ResponseEntity<>("Video added!", HttpStatus.CREATED);
     }

@@ -1,9 +1,6 @@
 package api.backend.Testing;
 
-import api.backend.Models.Director;
-import api.backend.Models.RegistrationRequest;
-import api.backend.Models.UserModel;
-import api.backend.Models.Video;
+import api.backend.Models.*;
 import api.backend.Repositories.DirectorRepository;
 import api.backend.Repositories.UserRepository;
 import api.backend.Repositories.VideoRepository;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,14 +34,30 @@ public class UsersTestingEndpoint {
 
     @RequestMapping(value = "/test/videos", method = RequestMethod.GET)
     public ResponseEntity<?> getAllVideos(){
-        List<Video> response = videoRepository.findAll();
+        List<VideoResponse> response = new ArrayList<>();
+        List<Video> videos = videoRepository.findAll();
+        for(Video video : videos){
+            VideoResponse res = new VideoResponse();
+            res.setTitle(video.getTitle());
+            res.setDirector(video.getDirector());
+            res.setComments(video.getComments());
+            res.setDescription(video.getDescription());
+            response.add(res);
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/test/directors", method = RequestMethod.GET)
     public ResponseEntity<?> getAllDirectors(){
+        List<DirectorResponse> ret = new ArrayList<>();
         List<Director> response = directorRepository.findAll();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        for(Director director: response){
+            DirectorResponse temp = new DirectorResponse();
+            temp.setName(director.getName());
+            temp.setVideos(director.getVideos());
+            ret.add(temp);
+        }
+        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
 
