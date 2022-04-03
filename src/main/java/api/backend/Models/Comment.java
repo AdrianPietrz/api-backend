@@ -35,9 +35,13 @@ public class Comment {
     @NonNull
     private Date date;
 
-    public Comment(@NonNull int rating, @NonNull String comment, @NonNull Date date) {
+    @NonNull
+    private Long userId;
+
+    public Comment(@NonNull int rating, @NonNull String comment, @NonNull Date date, @NonNull Long userId) {
         this.rating = rating;
         this.comment = comment;
         this.date = date;
+        this.userId = userId;
     }
 }
