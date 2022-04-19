@@ -29,11 +29,11 @@ public class LoginService {
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody LoginRequest authenticationRequest) throws Exception {
         Optional<UserModel> user = userRepository.findByUsername(authenticationRequest.getUsername());
+
         if( user == null){
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("User does not exist");
         }
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())

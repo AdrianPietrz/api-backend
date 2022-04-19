@@ -1,13 +1,11 @@
 package api.backend.Models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -36,12 +34,12 @@ public class Comment {
     private Date date;
 
     @NonNull
-    private Long userId;
+    private Long IDofUser;
 
-    public Comment(@NonNull int rating, @NonNull String comment, @NonNull Date date, @NonNull Long userId) {
+    public Comment(@NonNull int rating, @NonNull String comment, @NonNull Date date, @NonNull Long IDofUser) {
         this.rating = rating;
         this.comment = comment;
         this.date = date;
-        this.userId = userId;
+        this.IDofUser = IDofUser;
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,6 +73,17 @@ public class VideoController {
         return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/api/video/title", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllVideosTitles() {
+        System.out.println("aaaa");
+        List<String> videoResponseList = new ArrayList<>();
+        List<Video> videoList= videoRepository.findAll();
+        for(Video video : videoList){
+            videoResponseList.add(video.getTitle());
+        }
+        return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/api/video/watch/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> watchVideo(@PathVariable Long id) throws IOException {
         String path = "src/main/resources/" + id + ".mp4";
@@ -125,7 +135,7 @@ public class VideoController {
             }
         }
         if(comment == null) return new ResponseEntity<>("Comment not found!", HttpStatus.BAD_REQUEST);
-        if(user.getRole().equals("ADMIN") || user.getId() == comment.getUserId()){
+        if(user.getRole().equals("ADMIN") || user.getId() == comment.getIDofUser()){
             commentList.remove(comment);
             videoRepository.save(video);
             return new ResponseEntity<>("Comment deleted!", HttpStatus.OK);

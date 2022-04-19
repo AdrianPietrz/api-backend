@@ -27,7 +27,6 @@ public class UserDetailsServices implements UserDetailsService {
         else{
             return null;
         }
-
         return new User(userModel.getUsername(), userModel.getPassword(), new ArrayList<>());
     }
 
@@ -35,6 +34,17 @@ public class UserDetailsServices implements UserDetailsService {
         UserModel userModel;
         if(repository.findByUsername(username).isPresent()){
             userModel = repository.findByUsername(username).get();
+            return userModel;
+        }
+        else{
+            return null;
+        }
+    }
+
+    public UserModel getUserByEmail(String email) {
+        UserModel userModel;
+        if(repository.findByEmail(email).isPresent()){
+            userModel = repository.findByEmail(email).get();
             return userModel;
         }
         else{
