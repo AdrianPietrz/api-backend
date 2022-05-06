@@ -25,8 +25,10 @@ public class Video {
     private Long id; // autoincremented
     private String title;
     private String description;
+    private String url;
+    private String category;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "video_id")
     private List<Comment> comments;
 

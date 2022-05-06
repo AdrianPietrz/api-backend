@@ -7,15 +7,23 @@ import api.backend.Services.UserDetailsServices;
 import api.backend.Utils.JwtUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class VideoController {
@@ -68,6 +76,7 @@ public class VideoController {
             temp.setDescription(video.getDescription());
             temp.setDirector(video.getDirector());
             temp.setTitle(video.getTitle());
+            temp.setUrl(video.getUrl());
             videoResponseList.add(temp);
         }
         return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
@@ -75,7 +84,6 @@ public class VideoController {
 
     @RequestMapping(value = "/api/video/title", method = RequestMethod.GET)
     public ResponseEntity<?> getAllVideosTitles() {
-        System.out.println("aaaa");
         List<String> videoResponseList = new ArrayList<>();
         List<Video> videoList= videoRepository.findAll();
         for(Video video : videoList){
@@ -142,6 +150,99 @@ public class VideoController {
 
         } else return new ResponseEntity<>("Comment not found!", HttpStatus.FORBIDDEN);
 
+    }
+
+    @Bean
+    void loadSampleVideos(){
+        List<Video> videoList = videoRepository.findAll();
+        if(!videoList.isEmpty()) return;
+        String path = "https://www.filmweb.pl";
+        Document document;
+        try {
+            document = Jsoup.connect("https://www.filmweb.pl/ranking/film").get();
+            Elements links = document.select("a[href]");
+            for (Element link : links) {
+                if(link.attr("href").contains("/film/")){
+                    try{
+                        Document doc;
+                        doc = Jsoup.connect(path + link.attr("href")).get();
+                        Elements title = doc.getElementsByClass("fP__title");
+                        Elements image = doc.getElementsByClass("dataSource hide");
+                        Elements ele = doc.getElementsByClass("filmInfo__info cloneToCast cloneToOtherInfo");
+                        Elements description = doc.getElementsByClass("filmPosterSection__plot clamped");
+
+                        List<String> descriptionList = List.of(description.text().split("\\."));
+                        String descriptionVidoe = "";
+                        for( int i =0;i<descriptionList.size()-1;i++){
+                            if(i!=0) descriptionVidoe += " ";
+                             descriptionVidoe += descriptionList.get(i);
+                        }
+
+                        List<String> list = List.of(ele.text().split(" "));
+
+                        Director director = null;
+
+                        if(list.size()>2){
+                            String directorName = list.get(0) + " " + list.get(1);
+                            Optional<Director> tempDirector = directorRepository.findByName(directorName);
+
+                            if(!tempDirector.isPresent()){
+                                director = new Director(directorName);
+                                directorRepository.save(director);
+                            } else director = tempDirector.get();
+                        }
+                        if(director==null) continue;
+
+                        String category = null;
+                        Element meta = doc.select("div[itemprop=genre]").first();
+                        if(meta!=null) {
+                            List<String> lista = List.of(meta.text().split(" "));
+                            category = lista.get(0);
+                        }
+
+
+
+
+                        //System.out.println(ele.text());
+
+                        //System.out.println(ele.text());
+
+
+                        String url = "";
+                        Pattern p = Pattern.compile("\"imgUrl\".*.jpg");
+                        Matcher m = p.matcher(image.text());
+
+                        if(m.find()){
+
+
+                            Pattern tv = Pattern.compile("tv");
+                            Matcher mtv = tv.matcher(m.group());
+                            url = m.group().substring(10);
+                            if(mtv.find()){
+                                url = m.group().substring(10,mtv.start()-5);
+                            }
+                        }
+
+                        Optional<Video> temp = videoRepository.findByTitle(title.text());
+                        if(!temp.isPresent()){
+                            Video video = new Video();
+                            video.setUrl(url);
+                            video.setTitle(title.text());
+                            video.setDirector(director);
+                            video.setCategory(category);
+                            video.setDescription(descriptionVidoe);
+                            videoRepository.save(video);
+
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

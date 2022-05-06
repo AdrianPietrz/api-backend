@@ -23,7 +23,7 @@ public class DirectorController {
 
 
     @RequestMapping(value = "/api/director", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadVideo(
+    public ResponseEntity<?> uploadDirector(
             @RequestHeader(name = "Authorization") String token,
             @RequestBody DirectorRequest directorRequest) {
 
@@ -42,5 +42,20 @@ public class DirectorController {
         directorRepository.save(director);
 
         return new ResponseEntity<>("Director added!", HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/api/director/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getDirectors(
+            @RequestHeader(name = "Authorization") String token,
+            @PathVariable Long id) {
+
+        if(directorRepository.findById(id).isPresent()){
+            Director director = directorRepository.getById(id);
+            DirectorResponse response = new DirectorResponse();
+            response.setName(director.getName());
+            response.setVideos(director.getVideos());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Director not found!", HttpStatus.BAD_REQUEST);
     }
 }

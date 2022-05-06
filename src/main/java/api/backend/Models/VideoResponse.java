@@ -13,4 +13,5 @@ public class VideoResponse {
     private String description;
     private List<Comment> comments;
     private Director director;
+    private String url;
 }

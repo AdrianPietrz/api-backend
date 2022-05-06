@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,8 +32,8 @@ public class Director {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "director",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Video> videos;
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "director",cascade = CascadeType.ALL)
+    private List<Video> videos = new ArrayList<>();
 
 
     public void addDirectedVideo(Video video){

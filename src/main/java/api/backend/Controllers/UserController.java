@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @AllArgsConstructor
 public class UserController {
@@ -32,12 +35,51 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/user/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsers(@RequestHeader(name = "Authorization") String token){
         token = jwtTokenUtil.getUsernameFromRequestToken(token);
         UserModel user = userDetailsService.getUserByUsername(token);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        if(!user.getRole().equals("ADMIN")){
+            return new ResponseEntity<>("Access denied!", HttpStatus.BAD_REQUEST);
+        }
+        List<UserModel> userModelList = userRepository.findAll();
+        return new ResponseEntity<>(userModelList, HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "/api/user/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUser(@RequestHeader(name = "Authorization") String token, @PathVariable Long id){
+        token = jwtTokenUtil.getUsernameFromRequestToken(token);
+        UserModel user = userDetailsService.getUserByUsername(token);
+        if(!user.getRole().equals("ADMIN")){
+            return new ResponseEntity<>("Access denied!", HttpStatus.BAD_REQUEST);
+        }
+        Optional<UserModel> temp = userRepository.findById(id);
+        if(temp.isPresent()){
+            userRepository.delete(temp.get());
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/api/user/permission/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> grantAdminPermission(@RequestHeader(name = "Authorization") String token, @PathVariable Long id){
+        token = jwtTokenUtil.getUsernameFromRequestToken(token);
+        UserModel user = userDetailsService.getUserByUsername(token);
+        if(!user.getRole().equals("ADMIN")){
+            return new ResponseEntity<>("Access denied!", HttpStatus.BAD_REQUEST);
+        }
+        Optional<UserModel> temp = userRepository.findById(id);
+        if(temp.isPresent()){
+            user = temp.get();
+            user.setRole("ADMIN");
+            userRepository.save(user);
+            return new ResponseEntity<>("Permission Granted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Not found", HttpStatus.BAD_REQUEST);
+    }
+
 
     @CrossOrigin
     @RequestMapping(value = "/api/user", method = RequestMethod.PUT)
