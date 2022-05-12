@@ -28,18 +28,11 @@ public class Video {
     private String url;
     private String category;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "video_id")
-    private List<Comment> comments;
-
     @ManyToOne
     @JoinColumn(name="director_id", nullable=false)
     @JsonIgnore
     private Director director;
 
-    public void addComment(Comment comment){
-        comments.add(comment);
-    }
 
 }
 

@@ -40,8 +40,8 @@ public class UsersTestingEndpoint {
             VideoResponse res = new VideoResponse();
             res.setTitle(video.getTitle());
             res.setDirector(video.getDirector());
-            res.setComments(video.getComments());
             res.setDescription(video.getDescription());
+            res.setUrl(video.getUrl());
             response.add(res);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);

@@ -31,11 +31,4 @@ public class UserModel {
     @NonNull
     private String role;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
-    private List<Comment> comments;
-
-    public void addComment(Comment comment){
-        comments.add(comment);
-    }
 }

@@ -5,8 +5,12 @@ import api.backend.Repositories.DirectorRepository;
 import api.backend.Repositories.VideoRepository;
 import api.backend.Services.UserDetailsServices;
 import api.backend.Utils.JwtUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +41,7 @@ public class VideoController {
     @Autowired
     private DirectorRepository directorRepository;
 
+    @ApiOperation(value = "niepotrzebna na razie")
     @RequestMapping(value = "/api/video/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> uploadVideo(
             @RequestHeader(name = "Authorization") String token,
@@ -65,23 +70,52 @@ public class VideoController {
 
         return new ResponseEntity<>("Video added!", HttpStatus.CREATED);
     }
-
+    @ApiOperation(value = "zwraca wszystkie filmy")
     @RequestMapping(value = "/api/video/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllVideos() {
         List<VideoResponse> videoResponseList = new ArrayList<>();
         List<Video> videoList= videoRepository.findAll();
         for(Video video : videoList){
             VideoResponse temp = new VideoResponse();
-            temp.setComments(video.getComments());
             temp.setDescription(video.getDescription());
             temp.setDirector(video.getDirector());
+            temp.setCategory(video.getCategory());
             temp.setTitle(video.getTitle());
+            temp.setId(video.getId());
             temp.setUrl(video.getUrl());
             videoResponseList.add(temp);
         }
         return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
     }
+    @ApiOperation(value = "zwraca film o podanym id")
+    @CrossOrigin
+    @RequestMapping(value = "/api/video/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getVideoById(@PathVariable Long id) {
+        Optional<Video> temp = videoRepository.findById(id);
+        Video video = null;
+        if(temp.isPresent()){
+            video = temp.get();
+        } else {
+            return new ResponseEntity<>("Not found!", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(video, HttpStatus.OK);
 
+    }
+
+    @ApiOperation(value = "zwraca wszytskie kategorie jake wystepuja w bazie")
+    @RequestMapping(value = "/api/video/categories", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllCategories() {
+        List<String> response = new ArrayList<>();
+        List<Video> videoList= videoRepository.findAll();
+        for(Video video : videoList){
+            if(response.contains(video.getCategory())) continue;
+            response.add(video.getCategory());
+        }
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "zwraca tutuły wszytskich filmow, np do listy roziwjanej")
     @RequestMapping(value = "/api/video/title", method = RequestMethod.GET)
     public ResponseEntity<?> getAllVideosTitles() {
         List<String> videoResponseList = new ArrayList<>();
@@ -92,65 +126,38 @@ public class VideoController {
         return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/video/watch/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> watchVideo(@PathVariable Long id) throws IOException {
-        String path = "src/main/resources/" + id + ".mp4";
-        InputStream in = getClass()
-                .getResourceAsStream(path);
-        byte[] bytes = IOUtils.toByteArray(in);
-        return new ResponseEntity<>(bytes,HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/api/video/{id}/comment", method = RequestMethod.POST)
-    public ResponseEntity<?> addCommentToVideo( @RequestHeader(name = "Authorization") String token,
-                                                @RequestBody CommentRequest commentRequest,
-                                                @PathVariable Long id) {
-
-        token = jwtUtil.getUsernameFromRequestToken(token);
-        UserModel user = userDetailsServices.getUserByUsername(token);
-        Date date = new Date();
-        Comment comment = new Comment(commentRequest.getRating(),commentRequest.getText(),date, user.getId());
-        Video video;
-        if(videoRepository.findById(id).isPresent()){
-            video = videoRepository.findById(id).get();
-        } else {
-            return new ResponseEntity<>("Video not found!", HttpStatus.FORBIDDEN);
+    @RequestMapping(value = "/api/video/filtered/title", method = RequestMethod.POST)
+    public ResponseEntity<?> getAllVideosFiltredTitles(@RequestBody String category) {
+        List<String> videoResponseList = new ArrayList<>();
+        List<Video> videoList= videoRepository.findAll();
+        category = category.substring(1,category.length() - 1 );
+        for(Video video : videoList){
+            if(video.getCategory().equals(category)) videoResponseList.add(video.getTitle());
         }
-        video.addComment(comment);
-        user.addComment(comment);
-
-        return new ResponseEntity<>("Comment added!", HttpStatus.OK);
+        return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/video/{id}/comment/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteComment( @RequestHeader(name = "Authorization") String token,
-                                                @RequestBody CommentRequest commentRequest,
-                                                @PathVariable Long id,
-                                                @PathVariable Long commentId) {
-
-        token = jwtUtil.getUsernameFromRequestToken(token);
-        UserModel user = userDetailsServices.getUserByUsername(token);
-
-        Video video = videoRepository.getById(id);
-        if(video == null) return new ResponseEntity<>("Video not found!", HttpStatus.BAD_REQUEST);
-
-        List<Comment> commentList = video.getComments();
-        Comment comment = null;
-        for(Comment temp : commentList){
-            if(temp.getId()==commentId){
-                comment = temp;
-            }
+    @ApiOperation(value = "zwraca filmy z podanej kategori, kategoria jako string")
+    @RequestMapping(value = "/api/video/filtered", method = RequestMethod.POST)
+    public ResponseEntity<?> getAllVideosTitles(@RequestBody String category) {
+        List<VideoResponse> videoResponseList = new ArrayList<>();
+        List<Video> videoList= videoRepository.findAll();
+        category = category.substring(1,category.length() - 1 );
+        for(Video video : videoList){
+            if(!video.getCategory().equals(category)) continue;
+            VideoResponse temp = new VideoResponse();
+            temp.setDescription(video.getDescription());
+            temp.setCategory(video.getCategory());
+            temp.setDirector(video.getDirector());
+            temp.setId(video.getId());
+            temp.setTitle(video.getTitle());
+            temp.setUrl(video.getUrl());
+            videoResponseList.add(temp);
         }
-        if(comment == null) return new ResponseEntity<>("Comment not found!", HttpStatus.BAD_REQUEST);
-        if(user.getRole().equals("ADMIN") || user.getId() == comment.getIDofUser()){
-            commentList.remove(comment);
-            videoRepository.save(video);
-            return new ResponseEntity<>("Comment deleted!", HttpStatus.OK);
-
-        } else return new ResponseEntity<>("Comment not found!", HttpStatus.FORBIDDEN);
-
+        return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
     }
+
+
 
     @Bean
     void loadSampleVideos(){
@@ -225,6 +232,7 @@ public class VideoController {
 
                         Optional<Video> temp = videoRepository.findByTitle(title.text());
                         if(!temp.isPresent()){
+                            if(title==null || url==null || category == null || director==null) continue;
                             Video video = new Video();
                             video.setUrl(url);
                             video.setTitle(title.text());

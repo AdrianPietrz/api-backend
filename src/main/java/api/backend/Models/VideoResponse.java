@@ -9,9 +9,10 @@ import java.util.List;
 @NoArgsConstructor
 public class VideoResponse {
 
+    private Long id;
     private String title;
     private String description;
-    private List<Comment> comments;
+    private String category;
     private Director director;
     private String url;
 }

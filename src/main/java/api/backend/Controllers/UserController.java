@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 @AllArgsConstructor
 public class UserController {
@@ -46,7 +47,6 @@ public class UserController {
         return new ResponseEntity<>(userModelList, HttpStatus.OK);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/api/user/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@RequestHeader(name = "Authorization") String token, @PathVariable Long id){
         token = jwtTokenUtil.getUsernameFromRequestToken(token);
@@ -62,7 +62,6 @@ public class UserController {
         return new ResponseEntity<>("Not found", HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/api/user/permission/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> grantAdminPermission(@RequestHeader(name = "Authorization") String token, @PathVariable Long id){
         token = jwtTokenUtil.getUsernameFromRequestToken(token);
@@ -81,7 +80,6 @@ public class UserController {
     }
 
 
-    @CrossOrigin
     @RequestMapping(value = "/api/user", method = RequestMethod.PUT)
     public ResponseEntity<?> updateUser(@RequestHeader(name = "Authorization") String token,
                                         @RequestBody ChangePasswordRequest changePasswordRequest){
