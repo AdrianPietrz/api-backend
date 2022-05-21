@@ -22,10 +22,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,6 +81,7 @@ public class VideoController {
             temp.setTitle(video.getTitle());
             temp.setId(video.getId());
             temp.setUrl(video.getUrl());
+            temp.setRating(video.getRating());
             videoResponseList.add(temp);
         }
         return new ResponseEntity<>(videoResponseList,HttpStatus.OK);
@@ -150,6 +149,7 @@ public class VideoController {
             temp.setCategory(video.getCategory());
             temp.setDirector(video.getDirector());
             temp.setId(video.getId());
+            temp.setRating(video.getRating());
             temp.setTitle(video.getTitle());
             temp.setUrl(video.getUrl());
             videoResponseList.add(temp);
@@ -210,11 +210,6 @@ public class VideoController {
 
 
 
-                        //System.out.println(ele.text());
-
-                        //System.out.println(ele.text());
-
-
                         String url = "";
                         Pattern p = Pattern.compile("\"imgUrl\".*.jpg");
                         Matcher m = p.matcher(image.text());
@@ -239,6 +234,11 @@ public class VideoController {
                             video.setDirector(director);
                             video.setCategory(category);
                             video.setDescription(descriptionVidoe);
+                            float leftLimit = 1F;
+                            float rightLimit = 10F;
+                            float generatedFloat = leftLimit + new Random().nextFloat() * (rightLimit - leftLimit);
+                            DecimalFormat df = new DecimalFormat("#.#");
+                            video.setRating(df.format(generatedFloat));
                             videoRepository.save(video);
 
                         }

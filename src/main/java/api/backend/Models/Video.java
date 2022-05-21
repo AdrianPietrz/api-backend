@@ -27,6 +27,7 @@ public class Video {
     private String description;
     private String url;
     private String category;
+    private String rating;
 
     @ManyToOne
     @JoinColumn(name="director_id", nullable=false)
