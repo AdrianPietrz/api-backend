@@ -173,7 +173,7 @@ public class VideoController {
                     try{
                         Document doc;
                         doc = Jsoup.connect(path + link.attr("href")).get();
-                        Elements title = doc.getElementsByClass("fP__title");
+                        Elements title = doc.getElementsByClass("filmCoverSection__title");
                         Elements image = doc.getElementsByClass("dataSource hide");
                         Elements ele = doc.getElementsByClass("filmInfo__info cloneToCast cloneToOtherInfo");
                         Elements description = doc.getElementsByClass("filmPosterSection__plot clamped");
