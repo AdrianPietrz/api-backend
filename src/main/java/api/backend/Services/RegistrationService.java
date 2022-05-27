@@ -30,7 +30,6 @@ public class RegistrationService {
         if(userRepository.findByUsername("Admin").isPresent()) return;
         String encodedPassword = bCryptPasswordEncoder.encode("admin");
         UserModel user = new UserModel("Admin", "admin@admin.admin", encodedPassword, "ADMIN");
-        user.setProfilePicture("src/main/resources/base.jpeg");
         userRepository.save(user);
     }
 
