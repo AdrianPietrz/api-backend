@@ -62,7 +62,7 @@ public class DirectorController {
         return new ResponseEntity<>("Director not found!", HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/api/director/name", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/director", method = RequestMethod.GET)
     public ResponseEntity<?> getDirectorsNames() {
         List<Director> directorList = directorRepository.findAll();
         List<DirectorResponse> ret = new ArrayList<>();
@@ -76,7 +76,7 @@ public class DirectorController {
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/director", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/director/name", method = RequestMethod.GET)
     public ResponseEntity<?> getDirectors() {
         List<Director> directorList = directorRepository.findAll();
         List<String> ret = new ArrayList<>();
