@@ -91,6 +91,11 @@
 			<artifactId>stripe-java</artifactId>
 			<version>20.121.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.9.0</version>
+		</dependency>
 
 
 
