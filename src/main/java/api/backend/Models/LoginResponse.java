@@ -8,5 +8,5 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class LoginResponse implements Serializable {
-    private final String jwt;
+    private String jwt;
 }

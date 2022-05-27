@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegistrationController {
 
     @Autowired
-    private final RegistrationService registrationService;
+    private RegistrationService registrationService;
 
     @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerNewUser(@RequestBody RegistrationRequest request){

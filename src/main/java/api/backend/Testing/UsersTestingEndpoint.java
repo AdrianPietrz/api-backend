@@ -21,9 +21,9 @@ import java.util.List;
 public class UsersTestingEndpoint {
 
 
-    private final UserRepository userRepository;
-    private final VideoRepository videoRepository;
-    private  final DirectorRepository directorRepository;
+    private UserRepository userRepository;
+    private VideoRepository videoRepository;
+    private DirectorRepository directorRepository;
 
     @RequestMapping(value = "/test/users", method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsers(){

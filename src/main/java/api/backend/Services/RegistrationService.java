@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 public class RegistrationService {
 
     @Autowired
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private final EmailValidation emailValidator;
+    private EmailValidation emailValidator;
     @Autowired
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Bean

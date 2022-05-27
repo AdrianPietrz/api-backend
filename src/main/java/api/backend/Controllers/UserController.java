@@ -36,9 +36,9 @@ public class UserController {
     @Autowired
     private UserDetailsServices userDetailsService;
     @Autowired
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
 
