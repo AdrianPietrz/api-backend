@@ -63,7 +63,7 @@ public class DirectorController {
     }
 
     @RequestMapping(value = "/api/director", method = RequestMethod.GET)
-    public ResponseEntity<?> getDirectorsNames() {
+    public ResponseEntity<?> getDirectors() {
         List<Director> directorList = directorRepository.findAll();
         List<DirectorResponse> ret = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class DirectorController {
     }
 
     @RequestMapping(value = "/api/director/name", method = RequestMethod.GET)
-    public ResponseEntity<?> getDirectors() {
+    public ResponseEntity<?> getDirectorsNames() {
         List<Director> directorList = directorRepository.findAll();
         List<String> ret = new ArrayList<>();
 
