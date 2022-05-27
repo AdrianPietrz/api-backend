@@ -6,6 +6,7 @@ import api.backend.Models.UserModel;
 import api.backend.Repositories.UserRepository;
 import api.backend.Utils.JwtUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,9 +22,13 @@ import java.util.Optional;
 @AllArgsConstructor
 public class LoginService {
 
+    @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
     private JwtUtil jwtTokenUtil;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private UserDetailsServices userDetailsServices;
 
     public ResponseEntity<?> createAuthenticationToken(

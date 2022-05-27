@@ -6,15 +6,23 @@ import api.backend.Services.RegistrationService;
 import api.backend.Services.UserDetailsServices;
 import api.backend.Utils.JwtUtil;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +31,15 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserController {
 
+    @Autowired
     private JwtUtil jwtTokenUtil;
+    @Autowired
     private UserDetailsServices userDetailsService;
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @RequestMapping(value = "/api/user", method = RequestMethod.GET)
@@ -115,4 +128,5 @@ public class UserController {
         return new ResponseEntity<>("Nowe hasło nie może być takie samo", HttpStatus.BAD_REQUEST);
 
     }
+    
 }

@@ -5,6 +5,7 @@ import api.backend.Models.UserModel;
 import api.backend.Repositories.UserRepository;
 import api.backend.Utils.EmailValidation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class RegistrationService {
 
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final EmailValidation emailValidator;
+    @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
@@ -26,6 +30,7 @@ public class RegistrationService {
         if(userRepository.findByUsername("Admin").isPresent()) return;
         String encodedPassword = bCryptPasswordEncoder.encode("admin");
         UserModel user = new UserModel("Admin", "admin@admin.admin", encodedPassword, "ADMIN");
+        user.setProfilePicture("src/main/resources/base.jpeg");
         userRepository.save(user);
     }
 
