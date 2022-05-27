@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class DirectorController {
 
@@ -45,7 +48,7 @@ public class DirectorController {
     }
 
     @RequestMapping(value = "/api/director/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getDirectors(
+    public ResponseEntity<?> getDirector(
             @RequestHeader(name = "Authorization") String token,
             @PathVariable Long id) {
 
@@ -58,4 +61,31 @@ public class DirectorController {
         }
         return new ResponseEntity<>("Director not found!", HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/api/director/name", method = RequestMethod.GET)
+    public ResponseEntity<?> getDirectorsNames() {
+        List<Director> directorList = directorRepository.findAll();
+        List<DirectorResponse> ret = new ArrayList<>();
+
+        for(Director director : directorList){
+            DirectorResponse response =  new DirectorResponse();
+            response.setName(director.getName());
+            response.setVideos(director.getVideos());
+            ret.add(response);
+        }
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/director", method = RequestMethod.GET)
+    public ResponseEntity<?> getDirectors() {
+        List<Director> directorList = directorRepository.findAll();
+        List<String> ret = new ArrayList<>();
+
+        for(Director director : directorList){
+            ret.add(director.getName());
+        }
+        return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+
+
 }
