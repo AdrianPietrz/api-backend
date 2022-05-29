@@ -7,7 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class CommentRequest {
 
-    int rating;
     String text;
 
 }

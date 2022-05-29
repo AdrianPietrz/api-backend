@@ -1,7 +1,9 @@
 package api.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,5 +32,9 @@ public class UserModel {
     private String password; // Should be encoded
     @NonNull
     private String role;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
 
 }

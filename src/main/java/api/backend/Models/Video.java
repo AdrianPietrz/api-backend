@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,6 +34,10 @@ public class Video {
     @JoinColumn(name="director_id", nullable=false)
     @JsonIgnore
     private Director director;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "video",cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
 
 
 }
