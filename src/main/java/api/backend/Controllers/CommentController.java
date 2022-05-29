@@ -30,28 +30,26 @@ public class CommentController {
     UserRepository userRepository;
 
     @RequestMapping(value = "/api/comments/video/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getVideoComments(@RequestHeader(name = "Authorization") String token,@PathVariable Long id){
+    public ResponseEntity<?> getVideoComments(@PathVariable Long id){
 
-        Video video = videoRepository.getById(id);
-
+        Video video = videoRepository.findById(id).get();
         List<Comment> res = commentRepository.findAllByVideo(video);
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/comments/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserComments(@RequestHeader(name = "Authorization") String token,@PathVariable Long id){
+    public ResponseEntity<?> getUserComments(@PathVariable Long id){
 
-        UserModel user = userRepository.getById(id);
+        UserModel user = userRepository.findById(id).get();
 
         List<Comment> res = commentRepository.findAllByUser(user);
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/comments/video/{videoId}/user{userId}", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadComment(@RequestHeader(name = "Authorization")
-                                                       String token, @PathVariable Long videoId
+    @RequestMapping(value = "/api/comments/video/{videoId}/user/{userId}", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadComment(@PathVariable Long videoId
             , @PathVariable Long userId, @RequestBody CommentRequest request){
 
         UserModel user = userRepository.getById(userId);
@@ -61,6 +59,7 @@ public class CommentController {
         comment.setComment(request.getText());
         comment.setUser(user);
         comment.setVideo(video);
+        commentRepository.save(comment);
 
         return new ResponseEntity<>("Added!", HttpStatus.OK);
     }

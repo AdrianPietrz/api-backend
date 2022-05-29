@@ -26,11 +26,11 @@ public class Comment {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name="video_id", nullable=false)
+    @JoinColumn(name="video_id")
     private Video video;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="user_id")
     private UserModel user;
 
 }
