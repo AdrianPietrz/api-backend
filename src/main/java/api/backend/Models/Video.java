@@ -29,6 +29,7 @@ public class Video {
     private String url;
     private String category;
     private String rating;
+    private int rates;
 
     @ManyToOne
     @JoinColumn(name="director_id", nullable=false)
@@ -38,6 +39,10 @@ public class Video {
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "video",cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "videoList")
+    private List<UserModel> users;
 
 
 }

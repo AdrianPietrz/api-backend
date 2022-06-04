@@ -239,6 +239,7 @@ public class VideoController {
                             float generatedFloat = leftLimit + new Random().nextFloat() * (rightLimit - leftLimit);
                             DecimalFormat df = new DecimalFormat("#.#");
                             video.setRating(df.format(generatedFloat));
+                            video.setRates(1);
                             videoRepository.save(video);
 
                         }

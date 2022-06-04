@@ -37,4 +37,15 @@ public class UserModel {
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "user",cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "video_list",
+            joinColumns = @JoinColumn(name = "video_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<Video> videoList = new ArrayList<>();
+
+
+    public void addVideo(Video video){
+        videoList.add(video);
+    }
 }

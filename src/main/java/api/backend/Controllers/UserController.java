@@ -42,10 +42,18 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @RequestMapping(value = "/api/user/videos", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserVideos(@RequestHeader(name = "Authorization") String token){
+        token = jwtTokenUtil.getUsernameFromRequestToken(token);
+        UserModel user = userDetailsService.getUserByUsername(token);
+        return new ResponseEntity<>(user.getVideoList(), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/api/user", method = RequestMethod.GET)
     public ResponseEntity<?> registerNewUser(@RequestHeader(name = "Authorization") String token){
         token = jwtTokenUtil.getUsernameFromRequestToken(token);
         UserModel user = userDetailsService.getUserByUsername(token);
+        System.out.println(user.getVideoList().size());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
