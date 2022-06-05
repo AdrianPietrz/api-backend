@@ -15,5 +15,5 @@ public class VideoResponse {
     private String category;
     private Director director;
     private String url;
-    private String rating;
+    private float rating;
 }

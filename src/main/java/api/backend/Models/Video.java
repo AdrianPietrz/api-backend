@@ -28,7 +28,7 @@ public class Video {
     private String description;
     private String url;
     private String category;
-    private String rating;
+    private float rating;
     private int rates;
 
     @ManyToOne

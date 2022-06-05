@@ -66,13 +66,13 @@ public class CommentController {
 
     @RequestMapping(value = "/api/comments/video/{videoId}/rating/{rate}", method = RequestMethod.POST)
     public ResponseEntity<?> uploadRate(@PathVariable Long videoId
-            , @PathVariable Double rate){
+            , @PathVariable float rate){
 
         Video video = videoRepository.getById(videoId);
-        Double currentRate = Double.valueOf(video.getRating())*Double.valueOf(video.getRates());
-        currentRate = currentRate + rate / Double.valueOf(video.getRates()+1);
+        float currentRate = video.getRating()*video.getRates();
+        currentRate = (currentRate + rate) / (video.getRates()+1);
         video.setRates(video.getRates()+1);
-        video.setRating(String.valueOf(currentRate));
+        video.setRating(currentRate);
 
         videoRepository.save(video);
 
