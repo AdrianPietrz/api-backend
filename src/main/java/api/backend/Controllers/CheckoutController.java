@@ -41,7 +41,6 @@ public class CheckoutController {
         UserModel user = userDetailsService.getUserByUsername(token);
 
         Video video = videoRepository.getById(id);
-        if(video==null) System.out.println("Co jest");
         if(!user.getVideoList().contains(video)){
             user.addVideo(video);
             video.getUsers().add(user);
