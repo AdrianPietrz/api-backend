@@ -54,6 +54,12 @@ public class CommentController {
 
         UserModel user = userRepository.getById(userId);
         Video video = videoRepository.getById(videoId);
+        List<Comment> commentList = video.getCommentList();
+        for(Comment comment : commentList){
+            if(comment.getUser().equals(user)){
+                return new ResponseEntity<>("You have already commented this video!", HttpStatus.BAD_REQUEST);
+            }
+        }
 
         Comment comment = new Comment();
         comment.setComment(request.getText());
