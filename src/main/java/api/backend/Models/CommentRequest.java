@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class CommentRequest {
 
     private String text;
+    private float rating;
 
 }

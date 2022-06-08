@@ -27,6 +27,8 @@ public class Comment {
 
     private String comment;
 
+    private float rating;
+
     @ManyToOne
     @JoinColumn(name="video_id")
     private Video video;
