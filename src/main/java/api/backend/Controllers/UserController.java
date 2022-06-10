@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,19 @@ public class UserController {
     public ResponseEntity<?> getUserVideos(@RequestHeader(name = "Authorization") String token){
         token = jwtTokenUtil.getUsernameFromRequestToken(token);
         UserModel user = userDetailsService.getUserByUsername(token);
-        return new ResponseEntity<>(user.getVideoList(), HttpStatus.OK);
+        List<VideoResponse> videoResponseList = new ArrayList<>();
+        for(Video video : user.getVideoList()){
+            VideoResponse temp = new VideoResponse();
+            temp.setDescription(video.getDescription());
+            temp.setDirector(video.getDirector());
+            temp.setCategory(video.getCategory());
+            temp.setTitle(video.getTitle());
+            temp.setId(video.getId());
+            temp.setUrl(video.getUrl());
+            temp.setRating(video.getRating());
+            videoResponseList.add(temp);
+        }
+        return new ResponseEntity<>(videoResponseList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/user", method = RequestMethod.GET)
