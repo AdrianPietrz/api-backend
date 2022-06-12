@@ -4,19 +4,18 @@ import api.backend.Models.UserModel;
 import api.backend.Models.Video;
 import api.backend.Repositories.UserRepository;
 import api.backend.Repositories.VideoRepository;
+import api.backend.Services.MailService;
 import api.backend.Services.UserDetailsServices;
 import api.backend.Utils.JwtUtil;
 import com.google.gson.Gson;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
-import com.stripe.net.RequestOptions;
 import com.stripe.param.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
@@ -30,13 +29,15 @@ public class CheckoutController {
     private VideoRepository videoRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MailService mailSender;
 
     private String stripePublicKey = "sk_test_7mJuPfZsBzc3JkrANrFrcDqC";
 
 
-    @RequestMapping(value = "/checkout/{id}", method = RequestMethod.POST)
-    public ResponseEntity<?> checkout(@RequestHeader(name = "Authorization") String token,@PathVariable Long id) throws StripeException {
 
+    @RequestMapping(value = "/bought/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> bought(@RequestHeader(name = "Authorization") String token, @PathVariable Long id) throws Exception {
         token = jwtTokenUtil.getUsernameFromRequestToken(token);
         UserModel user = userDetailsService.getUserByUsername(token);
 
@@ -48,7 +49,13 @@ public class CheckoutController {
             userRepository.save(user);
 
         }
-        System.out.println(user.getVideoList().size());
+        return new ResponseEntity<>("Bought!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/checkout/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> checkout(@RequestHeader(name = "Authorization") String token,@PathVariable Long id) throws Exception {
+
+
         Gson gson = new Gson();
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
@@ -57,10 +64,13 @@ public class CheckoutController {
                 .build();
         PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-
-        System.out.println(paymentIntent.getClientSecret());
+        //mailSender.sendEmail(user.getEmail(),video.getTitle());
         return new ResponseEntity<>(gson.toJson(paymentIntent.getClientSecret()),HttpStatus.OK);
 
    }
+
+
+
+
 
 }
